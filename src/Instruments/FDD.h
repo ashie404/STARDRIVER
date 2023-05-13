@@ -17,7 +17,10 @@ namespace instruments {
             void setup();
 
         protected:
-            void drv_reset(uint8_t devAddress) override;
+            void ctrl_stop() override;
+            void ctrl_reset() override;
+
+            void dev_reset(uint8_t devAddress) override;
             void midi_noteOn(uint8_t devAddress, uint8_t message[]) override;
             void midi_noteOff(uint8_t devAddress, uint8_t message[]) override;
             void midi_pitchBend(uint8_t devAddress, uint8_t message[]) override;

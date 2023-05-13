@@ -1,6 +1,5 @@
 
 #include "RPi_Pico_TimerInterrupt.h"
-#include <RPi_Pico_ISR_Timer.h>
 #include "Timer.h"
 
 RPI_PICO_Timer ITimer(0);

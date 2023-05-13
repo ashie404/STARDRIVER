@@ -9,33 +9,45 @@
 namespace instruments {
 
     // Minimum and maximum head positions for all drives
-    unsigned int FDD::MIN_HEAD_POSITION[NUM_FDD] = {0};
-    unsigned int FDD::MAX_HEAD_POSITION[NUM_FDD] = {158};
+    unsigned int FDD::MIN_HEAD_POSITION[NUM_FDD] = {};
+    unsigned int FDD::MAX_HEAD_POSITION[NUM_FDD] = {};
 
     // Array that tracks the current head position of each floppy drive.
-    unsigned int FDD::currentHeadPos[NUM_FDD] = {0};
+    unsigned int FDD::currentHeadPos[NUM_FDD] = {};
 
     // Array that keeps track of the current state of each floppy pin
-    int FDD::pinState[NUM_FDD*2] = {LOW};
+    int FDD::pinState[NUM_FDD*2] = {};
 
     // Current note period assigned to each drive, 0 being off.
-    unsigned int FDD::drivePeriod[NUM_FDD] = {0};
+    unsigned int FDD::drivePeriod[NUM_FDD] = {};
 
     // Tracks the current tick-count for each drive (see FloppyDrives::tick() below)
-    unsigned int FDD::driveTickCount[NUM_FDD] = {0};
+    unsigned int FDD::driveTickCount[NUM_FDD] = {};
 
     // Original note period before pitch bending events
-    unsigned int FDD::originalPeriod[NUM_FDD] = {0};
+    unsigned int FDD::originalPeriod[NUM_FDD] = {};
 
     // FDD initalization code
 
     void FDD::setup() {
         // initalize step and direction pins
-        for (byte i=0; i < NUM_FDD; i++) {
-            pinMode(FDD_PINS[i][0], OUTPUT_12MA);
-            pinMode(FDD_PINS[i][1], OUTPUT_12MA);
+        for (int i=0; i < NUM_FDD; i++) {
+            pinMode(FDD_PINS[i][0], OUTPUT);
+            pinMode(FDD_PINS[i][1], OUTPUT);
         }
 
+        // initalize all arrays (i hate c++ sometimes)
+        for (int i = 0; i < NUM_FDD; i++) {
+          MIN_HEAD_POSITION[i] = 0;
+          MAX_HEAD_POSITION[i] = 158;
+          currentHeadPos[i] = 0;
+          drivePeriod[i] = 0;
+          driveTickCount[i] = 0;
+          originalPeriod[i] = 0;
+        }
+        for (int i = 0; i < NUM_FDD*2; i++) {
+          pinState[i] = LOW;
+        }
         // reset all drives
         resetAll();
         delay(1000); // wait a bit so we dont break things
@@ -43,9 +55,11 @@ namespace instruments {
         Timer::initialize(TMR_RES, tick); // initalize timer to set resolution and attach to tick function
 
         delay(500);
-        startupSound(0);
-        delay(500);
+        startupSound(0xFF); // startup saound on all drives
+        delay(2000);
         resetAll();
+        delay(1000);
+
     }
 
     void FDD::startupSound(byte driveNum) {
@@ -60,19 +74,40 @@ namespace instruments {
           noteDoubleTicks[37],
           0
       };
+      if (driveNum == 0xFF) { // if address is 0xFF (255) startup sound on all drives
       byte i = 0;
       unsigned long lastRun = 0;
-      while(i < 10) {
+      while(i < 9) {
+        if (millis() - 175 > lastRun) {
+          lastRun = millis();
+          for (byte d = 0; d < NUM_FDD; d++) {
+          drivePeriod[d] = chargeNotes[i];
+          }
+          i++;
+        }
+      }} else {
+      byte i = 0;
+      unsigned long lastRun = 0;
+      while(i < 9) {
         if (millis() - 175 > lastRun) {
           lastRun = millis();
           drivePeriod[driveNum] = chargeNotes[i++];
         }
-      }
+      }}
+    }
+
+    // Controller message handling
+    void FDD::ctrl_reset() {
+      resetAll();
+    }
+
+    void FDD::ctrl_stop() {
+      stopAll();
     }
 
     // FDD message handling
 
-    void FDD::drv_reset(uint8_t devAddress) {
+    void FDD::dev_reset(uint8_t devAddress) {
         reset(devAddress);
     }
 
@@ -117,7 +152,7 @@ namespace instruments {
     }
     
     void FDD::togglePin(byte driveNum, byte step_pin, byte direction_pin) {
-        int step_pin_tracking = driveNum*2; // the array index of the pin we're tracking (drive number x 2 for the step pin, x2+1 for direction)
+        int step_pin_tracking = (int)driveNum*2; // the array index of the pin we're tracking (drive number x 2 for the step pin, x2+1 for direction)
         int dir_pin_tracking = step_pin_tracking+1;
 
         //Switch directions if end has been reached
@@ -129,7 +164,7 @@ namespace instruments {
             digitalWrite(direction_pin, LOW);
         }
 
-        //Update currentPosition
+        //Update current head position accordingly
         if (pinState[dir_pin_tracking] == HIGH) {
             currentHeadPos[driveNum]--;
         } else {
@@ -149,7 +184,7 @@ namespace instruments {
       }
     }
 
-    //For a given floppy number, zeros the head.
+    //For a given drive number, zeros the head.
     void FDD::reset(byte driveNum)
     {
       drivePeriod[driveNum] = 0; // Stop current note

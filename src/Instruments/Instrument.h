@@ -7,7 +7,7 @@
 #include "../MidiDevice.h"
 #include <Arduino.h>
 
-#define TMR_RES 40 // Timer resolution
+#define TMR_RES 20 // Timer resolution
 #define TMR_RES2 (TMR_RES*2) // Double timer resolution
 
 // The period of notes in microseconds

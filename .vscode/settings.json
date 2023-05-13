@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "*.glsl": "glsl",
-        "cstddef": "cpp"
+        "cstddef": "cpp",
+        "typeinfo": "cpp"
     }
 }
