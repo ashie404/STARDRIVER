@@ -1,6 +1,6 @@
 /* 
- * MidiDevice 
- * Base class for any devices that accept MIDI events
+ * MidiDevice.h
+ * Header class for any devices that accept MIDI/control events from Controllers
  */
 
 #ifndef STARDRIVER_SRC_MIDIDEVICE_H_

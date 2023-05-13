@@ -1,6 +1,6 @@
 /* 
  * FDD.h
- * Floppy drive instrument header file
+ * Floppy disk drive instrument header file
  */
 
 #ifndef STARDRIVER_INSTRUMENTS_FDD_H_
@@ -28,8 +28,8 @@ namespace instruments {
             void midiEvent(uint8_t devAddress, uint8_t event, uint8_t message[]);
 
         private:
-            static unsigned int MIN_HEAD_POSITION[];
-            static unsigned int MAX_HEAD_POSITION[];
+            static unsigned int minHeadPos[];
+            static unsigned int maxHeadPos[];
             static unsigned int currentHeadPos[];
             static int pinState[];
             static unsigned int drivePeriod[];

@@ -8,7 +8,7 @@
 
 class Timer {
 public:
-    static void initialize(float microseconds, void (*isr)());
+    static void setup(float us, void (*isr)());
 };
 
 #endif

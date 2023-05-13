@@ -1,5 +1,7 @@
-/* Base instrument class */
-/* Stores constants used by all instruments */
+/*
+ * Instrument.h
+ * Stores constants that may be useful for most instruments
+ */
 
 #ifndef STARDRIVER_INSTRUMENTS_INSTRUMENT_H_
 #define STARDRIVER_INSTRUMENTS_INSTRUMENT_H_
@@ -10,7 +12,7 @@
 #define TMR_RES 20 // Timer resolution
 #define TMR_RES2 (TMR_RES*2) // Double timer resolution
 
-// The period of notes in microseconds
+// period of all midi notes in microseconds
 const unsigned int notePeriods[128] = {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   61162, 57737, 54496, 51414, 48544, 45809, 43253, 40816, 38521, 36364, 34317, 32394, //C0 - B0
@@ -25,6 +27,7 @@ const unsigned int notePeriods[128] = {
   0, 0, 0, 0, 0, 0, 0, 0
 };
 
+// calculate note ticks and double ticks by dividing by timer res/double timer res
 const unsigned int noteDoubleTicks[128] = {
     0/TMR_RES2, 0/TMR_RES2, 0/TMR_RES2, 0/TMR_RES2, 0/TMR_RES2, 0/TMR_RES2, 0/TMR_RES2, 0/TMR_RES2, 0/TMR_RES2, 0/TMR_RES2, 0/TMR_RES2, 0/TMR_RES2,
     61162/TMR_RES2, 57737/TMR_RES2, 54496/TMR_RES2, 51414/TMR_RES2, 48544/TMR_RES2, 45809/TMR_RES2, 43253/TMR_RES2, 40816/TMR_RES2, 38521/TMR_RES2, 36364/TMR_RES2, 34317/TMR_RES2, 32394/TMR_RES2, //C0 - B0

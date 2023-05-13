@@ -1,6 +1,7 @@
 /*
  * MidiController.h
-*/
+ * Header and class prototype for MidiController
+ */
 
 #ifndef STARDRIVER_CONTROLLERS_MIDICONTROLLER_H_
 #define STARDRIVER_CONTROLLERS_MIDICONTROLLER_H_

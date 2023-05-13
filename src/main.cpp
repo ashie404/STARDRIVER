@@ -1,6 +1,9 @@
-/* STARDRIVER v0.1 */
-/* written by ash  */
-/* ashiecorner.xyz */
+/*
+ * STARDRIVER V0.0.1
+ * A hardware instrument controller for RP2040/Pico boards.
+ * Written by Ash
+ * https://ashiecorner.xyz
+ */
 
 #include <Arduino.h>
 #include "Config.h"
@@ -18,7 +21,6 @@ MidiController controller = MidiController(instrument);
 #endif
 
 void setup() {
-  pinMode(25, OUTPUT);
   instrument->setup();
 
   controller.setup();

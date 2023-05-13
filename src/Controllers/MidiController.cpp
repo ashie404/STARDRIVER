@@ -1,4 +1,5 @@
 /*
+ * MidiController.cpp
  * Basic MIDI controller for STARDRIVER that plays a midi file loaded into flash
  */
 

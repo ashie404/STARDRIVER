@@ -1,7 +1,8 @@
 /*
- * Base class for all controllers
- *
-*/
+ * Controller.h
+ * Header class for all controllers
+ * Stores useful message bytes sent by controllers and recieved by devices.
+ */
 
 #ifndef STARDRIVER_CONTROLLERS_CONTROLLER_H_
 #define STARDRIVER_CONTROLLERS_CONTROLLER_H_

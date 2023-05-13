@@ -1,6 +1,6 @@
 /*
  * FDD.cpp
- * Floppy drive instrument main file
+ * Floppy disk drive instrument main file
  */
 
 #include "Instrument.h"
@@ -8,9 +8,9 @@
 
 namespace instruments {
 
-    // Minimum and maximum head positions for all drives
-    unsigned int FDD::MIN_HEAD_POSITION[NUM_FDD] = {};
-    unsigned int FDD::MAX_HEAD_POSITION[NUM_FDD] = {};
+    // Minimum and maximum head positions for all drives (should remain mostly the same, but there may be special instances in which these need to change)
+    unsigned int FDD::minHeadPos[NUM_FDD] = {};
+    unsigned int FDD::maxHeadPos[NUM_FDD] = {};
 
     // Array that tracks the current head position of each floppy drive.
     unsigned int FDD::currentHeadPos[NUM_FDD] = {};
@@ -21,7 +21,7 @@ namespace instruments {
     // Current note period assigned to each drive, 0 being off.
     unsigned int FDD::drivePeriod[NUM_FDD] = {};
 
-    // Tracks the current tick-count for each drive (see FloppyDrives::tick() below)
+    // Tracks the tick counter for each drive
     unsigned int FDD::driveTickCount[NUM_FDD] = {};
 
     // Original note period before pitch bending events
@@ -38,8 +38,8 @@ namespace instruments {
 
         // initalize all arrays (i hate c++ sometimes)
         for (int i = 0; i < NUM_FDD; i++) {
-          MIN_HEAD_POSITION[i] = 0;
-          MAX_HEAD_POSITION[i] = 158;
+          minHeadPos[i] = 0;
+          maxHeadPos[i] = 158;
           currentHeadPos[i] = 0;
           drivePeriod[i] = 0;
           driveTickCount[i] = 0;
@@ -52,11 +52,11 @@ namespace instruments {
         resetAll();
         delay(1000); // wait a bit so we dont break things
 
-        Timer::initialize(TMR_RES, tick); // initalize timer to set resolution and attach to tick function
+        Timer::setup(TMR_RES, tick); // initalize timer to the configured resolution and attach to tick function
 
         delay(500);
-        startupSound(0xFF); // startup saound on all drives
-        delay(2000);
+        startupSound(0xFF); // startup sound on all drives
+        delay(1000);
         resetAll();
         delay(1000);
 
@@ -156,10 +156,10 @@ namespace instruments {
         int dir_pin_tracking = step_pin_tracking+1;
 
         //Switch directions if end has been reached
-        if (currentHeadPos[driveNum] >= MAX_HEAD_POSITION[driveNum]) {
+        if (currentHeadPos[driveNum] >= maxHeadPos[driveNum]) {
             pinState[dir_pin_tracking] = HIGH;
             digitalWrite(direction_pin, HIGH);
-        } else if (currentHeadPos[driveNum] <= MIN_HEAD_POSITION[driveNum]) {
+        } else if (currentHeadPos[driveNum] <= minHeadPos[driveNum]) {
             pinState[dir_pin_tracking] = LOW;
             digitalWrite(direction_pin, LOW);
         }
@@ -195,7 +195,7 @@ namespace instruments {
       int dir_pin_tracking = step_pin_tracking+1;
 
       digitalWrite(dirPin,HIGH); // Go in reverse
-      for (unsigned int s=0;s<MAX_HEAD_POSITION[driveNum];s+=2){ //Half max because we're stepping directly (no toggle)
+      for (unsigned int s=0;s<maxHeadPos[driveNum];s+=2){ //Half max because we're stepping directly (no toggle)
         digitalWrite(stepPin,HIGH);
         digitalWrite(stepPin,LOW);
         delay(5);
@@ -218,7 +218,7 @@ namespace instruments {
       }
 
       // Reset all drives together
-      for (unsigned int s=0;s<MAX_HEAD_POSITION[0];s+=2){ //Half max because we're stepping directly (no toggle); grab max from index 0
+      for (unsigned int s=0;s<maxHeadPos[0];s+=2){ //Half max because we're stepping directly (no toggle); grab max from index 0
         for (byte d=0;d<NUM_FDD;d++) {
           byte stepPin = FDD_PINS[d][0];
           digitalWrite(stepPin,HIGH);
