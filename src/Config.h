@@ -18,8 +18,9 @@
 // pins drives are attached to {step, direction}
 const byte FDD_PINS[10][2] = {{0,1}, {2,3}, {4,5}, {6,7}, {8,9}, {10,11}, {12,13}, {14,15}, {16,17}, {18,19}};
 
-/// Controller you will use (currently only onboard MIDI supported)
+/// Controller you will use (currently only onboard MIDI and Moppy serial supported)
 
-#define CTRL_MIDI
+//#define CTRL_MIDI
+#define CTRL_SERIAL
 
 #endif

@@ -8,9 +8,9 @@
 #define STARDRIVER_CONTROLLERS_CONTROLLER_H_
 
 // Controller message bytes
-#define CTRL_RESET 0x1
-#define CTRL_START 0x2
-#define CTRL_STOP 0x3
+#define CTRL_RESET 0xFF
+#define CTRL_START 0xFA
+#define CTRL_STOP 0xFC
 
 // Device & MIDI message bytes
 #define DEV_RESET 0x0

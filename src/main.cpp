@@ -20,12 +20,24 @@ Instrument *instrument = new instruments::FDD();
 MidiController controller = MidiController(instrument);
 #endif
 
+#ifdef CTRL_SERIAL
+#include "Controllers/SerialController.h"
+SerialController controller = SerialController(instrument);
+#endif
+
 void setup() {
+  pinMode(25, OUTPUT);
   instrument->setup();
 
-  controller.setup();
+  controller.begin();
 }
 
 void loop() {
+  digitalWrite(25, HIGH);
+  #ifdef CTRL_MIDI
   controller.playMidi();
+  #endif
+  #ifdef CTRL_SERIAL
+  controller.readPort();
+  #endif
 }

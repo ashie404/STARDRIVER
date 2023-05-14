@@ -36,15 +36,19 @@ class MidiDevice {
                     break;
                 case MIDI_NOTEON: // midi note on
                     midi_noteOn(devAddress, message);
+                    Serial.printf("FDD %d NOTE_ON\n", devAddress);
                     break;
                 case MIDI_NOTEOFF: // midi note off
                     midi_noteOff(devAddress, message);
+                    Serial.printf("FDD %d NOTE_OFF\n", devAddress);
                     break;
                 case MIDI_PITCHBEND: // midi pitch bend
                     midi_pitchBend(devAddress, message);
+                    Serial.printf("FDD %d PITCH_BEND\n", devAddress);
                     break;
                 case MIDI_CC: // midi control change
                     midi_cc(devAddress, message);
+                    Serial.printf("FDD %d CC\n", devAddress);
                     break;
                 default:
                     midiEvent(devAddress, event, message);

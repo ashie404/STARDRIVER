@@ -32,8 +32,8 @@ namespace instruments {
     void FDD::setup() {
         // initalize step and direction pins
         for (int i=0; i < NUM_FDD; i++) {
-            pinMode(FDD_PINS[i][0], OUTPUT);
-            pinMode(FDD_PINS[i][1], OUTPUT);
+            pinMode(FDD_PINS[i][0], OUTPUT_12MA);
+            pinMode(FDD_PINS[i][1], OUTPUT_12MA);
         }
 
         // initalize all arrays (i hate c++ sometimes)
