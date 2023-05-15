@@ -11,6 +11,7 @@
 #include "../Config.h"
 #include "../MidiDevice.h"
 #include "Controller.h"
+#include "pico/stdlib.h"
 
 #define BAUDRATE 57600
 #define START_BYTE 0x4d
@@ -29,11 +30,11 @@
 
 class SerialController {
   public:
-      SerialController(MidiDevice *midiDevice);
-      void begin();
+      SerialController(MidiDevice* midiDevice);
+      void setup();
       void readPort();
   private:
-    MidiDevice *targetDevice;
+    MidiDevice* targetDevice;
     uint8_t messagePos = 0; // Track current message read position
     uint8_t messageBuffer[259]; // Max message length for Moppy messages is 259
     uint8_t pongBytes[8] = {0x4d, 0x00, 0x00, 0x04, 0x81, 0x01, 0x00, NUM_FDD-1};

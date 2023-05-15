@@ -9,10 +9,20 @@
 #include "Config.h"
 #include "Instruments/Instrument.h"
 #include "Controllers/Controller.h"
+#include <stdio.h>
+#include "pico/stdlib.h"
+
+std::vector<Instrument*> devices = {};
 
 #ifdef INSTRUMENT_FDD
 #include "Instruments/FDD.h"
 Instrument *instrument = new instruments::FDD();
+
+#endif
+
+#ifdef INSTRUMENT_SPK
+#include "Instruments/Speaker.h"
+Instrument *instrument = new instruments::Speaker();
 #endif
 
 #ifdef CTRL_MIDI
@@ -28,14 +38,13 @@ SerialController controller = SerialController(instrument);
 void setup() {
   pinMode(25, OUTPUT);
   instrument->setup();
-
-  controller.begin();
+  controller.setup();
 }
 
 void loop() {
   digitalWrite(25, HIGH);
   #ifdef CTRL_MIDI
-  controller.playMidi();
+  //controller.playMidi();
   #endif
   #ifdef CTRL_SERIAL
   controller.readPort();

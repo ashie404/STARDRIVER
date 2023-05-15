@@ -1,10 +1,10 @@
 /* 
- * FDD.h
- * Floppy disk drive instrument header file
+ * Speaker.h
+ * Speaker instrument header file
  */
 
-#ifndef STARDRIVER_INSTRUMENTS_FDD_H_
-#define STARDRIVER_INSTRUMENTS_FDD_H_
+#ifndef STARDRIVER_INSTRUMENTS_SPEAKER_H_
+#define STARDRIVER_INSTRUMENTS_SPEAKER_H_
 
 #include <Arduino.h>
 #include "Instrument.h"
@@ -12,7 +12,7 @@
 #include "../Config.h"
 
 namespace instruments {
-    class FDD : public Instrument {
+    class Speaker : public Instrument {
         public:
             void setup();
 
@@ -28,23 +28,19 @@ namespace instruments {
             void midiEvent(uint8_t devAddress, uint8_t event, uint8_t message[]);
 
         private:
-            static unsigned int minHeadPos[];
-            static unsigned int maxHeadPos[];
-            static unsigned int currentHeadPos[];
             static int pinState[];
-            static unsigned int drivePeriod[];
-            static unsigned int driveTickCount[];
+            static unsigned int spkPeriod[];
+            static unsigned int spkTickCount[];
             static unsigned int originalPeriod[];
 
-            // Max note the drives are allowed to play.
-            static const byte MAX_FDD_NOTE = 128;
+            // Max note the speakers are allowed to play.
+            static const byte MAX_SPK_NOTE = 128;
 
-            static void resetAll();
-            static void togglePin(byte driveNum, byte step_pin, byte direction_pin);
+            static void togglePin(byte spkNum, byte pin);
             static void stopAll();
-            static void reset(byte driveNum);
+            static void reset(byte spkNum);
             static void tick();
-            static void initSound(byte driveNum);
+            static void initSound(byte spkNum);
     };
 }
 

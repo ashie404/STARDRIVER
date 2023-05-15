@@ -9,7 +9,12 @@
 #include "../MidiDevice.h"
 #include <Arduino.h>
 
-#define TMR_RES 20 // Timer resolution
+enum InstType {
+    FDD = 0x00,
+    Speaker = 0x01,
+};
+
+#define TMR_RES 15 // Timer resolution
 #define TMR_RES2 (TMR_RES*2) // Double timer resolution
 
 // period of all midi notes in microseconds

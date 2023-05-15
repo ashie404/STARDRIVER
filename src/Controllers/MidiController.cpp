@@ -18,14 +18,7 @@ void MidiController::setup() {
     LittleFS.begin();
     File f = LittleFS.open("/rydeen.mid", "r");
     midi = MidiFile(f);
-    // merge all events into one track to make handling easier
-    uint32_t i = 0;
-    for (auto& track : midi.vecTracks) {
-        for (auto& event : track.vecEvents) {
-            Serial.printf("Merging track event %d\n", i++);
-            mergedTracks.push_back(event);
-        }
-    }
+    
 }
 
 void MidiController::playMidi() {

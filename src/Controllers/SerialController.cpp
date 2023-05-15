@@ -5,11 +5,11 @@
 
 #include "SerialController.h"
 
-SerialController::SerialController(MidiDevice *midiDevice) {
+SerialController::SerialController(MidiDevice* midiDevice) {
     targetDevice = midiDevice;
 }
 
-void SerialController::begin() {
+void SerialController::setup() {
     Serial.begin(BAUDRATE);
 }
 

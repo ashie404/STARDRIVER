@@ -54,15 +54,17 @@ namespace instruments {
 
         Timer::setup(TMR_RES, tick); // initalize timer to the configured resolution and attach to tick function
 
+        #ifdef INIT_SOUND
         delay(500);
-        startupSound(0xFF); // startup sound on all drives
+        initSound(0xFF); // init sound on all drives
         delay(1000);
+        #endif
         resetAll();
         delay(1000);
 
     }
 
-    void FDD::startupSound(byte driveNum) {
+    void FDD::initSound(byte driveNum) {
       unsigned int chargeNotes[] = {
           noteDoubleTicks[46],
           noteDoubleTicks[42],

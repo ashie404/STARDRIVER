@@ -46,6 +46,13 @@ class MidiFile {
             uint8_t channel = 0;
             uint8_t eventData[4];
             uint32_t deltaTick = 0;
+            uint32_t absTick = 0;
+        };
+        struct MidiNote {
+            TMidiEvent eventType;
+            uint8_t device = 0;
+            uint8_t eventData[2];
+            uint32_t absTime = 0;
         };
         struct MidiTrack {
             String trackName;
@@ -58,16 +65,6 @@ class MidiFile {
         MidiFile() {}
         MidiFile(File file) {
             ParseFile(file);
-        }
-
-        MidiTrack MergeTracks(std::vector<MidiTrack> tracksVec) {
-            MidiTrack temp = MidiTrack();
-            for (auto& track : tracksVec) {
-                for (auto& event : track.vecEvents) {
-                    temp.vecEvents.push_back(event);
-                }
-            }
-            return temp;
         }
 
     bool ParseFile(File file) {
@@ -162,13 +159,16 @@ class MidiFile {
             uint8_t previousEvent = 0;
 
             vecTracks.push_back(MidiTrack());
+            uint32_t timeAbs = 0;
 
             while (!endOfTrack) {
                 uint32_t timeDelta = 0;
+                
                 uint8_t event = 0;
 
                 // Read timeDelta
                 timeDelta = ReadValue();
+                timeAbs += timeDelta;
                 
                 // read midi event
                 event = file.read();
@@ -187,7 +187,7 @@ class MidiFile {
                         uint8_t channel = event & 0x0F;
                         uint8_t noteID = file.read();
                         uint8_t noteVel = file.read();
-                        vecTracks[n].vecEvents.push_back({ TMidiEvent::NoteOff, channel, {noteID, noteVel}, timeDelta });
+                        vecTracks[n].vecEvents.push_back({ TMidiEvent::NoteOff, channel, {noteID, noteVel}, timeDelta, timeAbs });
                         Serial.printf("MIDI_NOTE_OFF DEV: %d NOTE: %d VEL: %d T: %d\n", channel, noteID, noteVel, timeDelta);
                         break;}
 
@@ -197,7 +197,7 @@ class MidiFile {
                         uint8_t noteID = file.read();
                         uint8_t noteVel = file.read();
                         // if velocity is 0, note on events are treated as note off events in the MIDI standard
-                        vecTracks[n].vecEvents.push_back({ noteVel == 0 ? TMidiEvent::NoteOff : TMidiEvent::NoteOn, channel, {noteID, noteVel}, timeDelta });
+                        vecTracks[n].vecEvents.push_back({ noteVel == 0 ? TMidiEvent::NoteOff : TMidiEvent::NoteOn, channel, {noteID, noteVel}, timeDelta, timeAbs });
                         Serial.printf("%s DEV: %d NOTE: %d VEL: %d T: %d\n", noteVel == 0 ? "MIDI_NOTE_OFF" : "MIDI_NOTE_ON", channel, noteID, noteVel, timeDelta);
                         break;}
 
@@ -206,7 +206,7 @@ class MidiFile {
                         uint8_t channel = event & 0x0F;
                         uint8_t noteID = file.read();
                         uint8_t noteVel = file.read();
-                        vecTracks[n].vecEvents.push_back({ TMidiEvent::Aftertouch, channel, {noteID, noteVel}, timeDelta });
+                        vecTracks[n].vecEvents.push_back({ TMidiEvent::Aftertouch, channel, {noteID, noteVel}, timeDelta, timeAbs });
                         Serial.printf("MIDI_AFTERTOUCH DEV: %d NOTE: %d\n", channel, noteID);
                         break;}
 
@@ -215,7 +215,7 @@ class MidiFile {
                         uint8_t channel = event & 0x0F;
                         uint8_t noteID = file.read();
                         uint8_t noteVel = file.read();
-                        vecTracks[n].vecEvents.push_back({ TMidiEvent::ControlChange, channel, {noteID, noteVel}, timeDelta });
+                        vecTracks[n].vecEvents.push_back({ TMidiEvent::ControlChange, channel, {noteID, noteVel}, timeDelta, timeAbs });
                         Serial.printf("MIDI_CC DEV: %d NOTE: %d\n", channel, noteID);
                         break;}
 
@@ -238,7 +238,7 @@ class MidiFile {
                         uint8_t channel = event & 0x0F;
                         uint8_t LS7B = file.read();
                         uint8_t MS7B = file.read();
-                        vecTracks[n].vecEvents.push_back({ TMidiEvent::PitchBend, channel, {LS7B, MS7B}, timeDelta });
+                        vecTracks[n].vecEvents.push_back({ TMidiEvent::PitchBend, channel, {LS7B, MS7B}, timeDelta, timeAbs });
                         Serial.printf("MIDI_PITCH_BEND LS7B: %d MS7B: %d\n", LS7B, MS7B);
                         break;}
 
@@ -307,7 +307,7 @@ class MidiFile {
                                     uint8_t tempo1 = (tempo >> 8) & 0xFF;
                                     uint8_t tempo2 = (tempo >> 16) & 0xFF;
                                     uint8_t tempo3 = (tempo >> 24) & 0xFF;
-                                    vecTracks[n].vecEvents.push_back({ TMidiEvent::TempoChange, 0, {tempo0, tempo1, tempo2, tempo3}, timeDelta });
+                                    vecTracks[n].vecEvents.push_back({ TMidiEvent::TempoChange, 0, {tempo0, tempo1, tempo2, tempo3}, timeDelta, timeAbs });
                                     Serial.printf("MIDI_TEMPO_CHANGE TEMPO: %d\n", tempo);
                                     break;
                                 }
@@ -373,3 +373,17 @@ class MidiFile {
         return true;
     }  
 };
+
+MidiFile::MidiTrack MergeTracks(std::vector<MidiFile::MidiTrack> tracksVec) {
+    MidiFile::MidiTrack temp = MidiFile::MidiTrack();
+    for (auto& track : tracksVec) {
+        for (auto& event : track.vecEvents) {
+            temp.vecEvents.push_back(event);
+        }
+    }
+    return temp;
+}
+
+float TicksToSeconds(uint32_t deltaTick, uint32_t bpm, uint16_t tpb) {
+    return (deltaTick / tpb / bpm) * 60;
+}
