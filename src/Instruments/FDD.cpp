@@ -154,28 +154,27 @@ namespace instruments {
     }
     
     void FDD::togglePin(byte driveNum, byte step_pin, byte direction_pin) {
-        int step_pin_tracking = (int)driveNum*2; // the array index of the pin we're tracking (drive number x 2 for the step pin, x2+1 for direction)
-        int dir_pin_tracking = step_pin_tracking+1;
+        int pin_tracking = (int)driveNum*2; // the array index of the pin we're tracking (drive number x 2 for the step pin, x2+1 for direction)
 
         //Switch directions if end has been reached
         if (currentHeadPos[driveNum] >= maxHeadPos[driveNum]) {
-            pinState[dir_pin_tracking] = HIGH;
+            pinState[pin_tracking+1] = HIGH;
             digitalWrite(direction_pin, HIGH);
         } else if (currentHeadPos[driveNum] <= minHeadPos[driveNum]) {
-            pinState[dir_pin_tracking] = LOW;
+            pinState[pin_tracking+1] = LOW;
             digitalWrite(direction_pin, LOW);
         }
 
         //Update current head position accordingly
-        if (pinState[dir_pin_tracking] == HIGH) {
+        if (pinState[pin_tracking+1] == HIGH) {
             currentHeadPos[driveNum]--;
         } else {
             currentHeadPos[driveNum]++;
         }
 
         //Pulse the control pin
-        digitalWrite(step_pin, pinState[step_pin_tracking]);
-        pinState[step_pin_tracking] = ~pinState[step_pin_tracking];
+        digitalWrite(step_pin, pinState[pin_tracking]);
+        pinState[pin_tracking] = ~pinState[pin_tracking];
     }
     #pragma GCC pop_options
     
@@ -193,8 +192,7 @@ namespace instruments {
 
       byte stepPin = FDD_PINS[driveNum][0];
       byte dirPin = FDD_PINS[driveNum][1];
-      int step_pin_tracking = driveNum*2; // the array index of the pin we're tracking (drive number x 2 for the step pin, x2+1 for direction)
-      int dir_pin_tracking = step_pin_tracking+1;
+      int pin_tracking = driveNum*2; // the array index of the pin we're tracking (drive number x 2 for the step pin, x2+1 for direction)
 
       digitalWrite(dirPin,HIGH); // Go in reverse
       for (unsigned int s=0;s<maxHeadPos[driveNum];s+=2){ //Half max because we're stepping directly (no toggle)
@@ -203,9 +201,9 @@ namespace instruments {
         delay(5);
       }
       currentHeadPos[driveNum] = 0;
-      pinState[step_pin_tracking] = LOW;
+      pinState[pin_tracking] = LOW;
       digitalWrite(dirPin,LOW);
-      pinState[dir_pin_tracking] = LOW;
+      pinState[pin_tracking+1] = LOW;
     }
 
     // Resets all the drives
@@ -232,11 +230,11 @@ namespace instruments {
       // Return pin and head tracking variables to ready state
       for (byte d=0;d<NUM_FDD;d++) {
         byte stepPin = FDD_PINS[d][0];
-        int step_pin_tracking = d*2;
+        int pin_tracking = d*2;
         currentHeadPos[d] = 0;
-        pinState[step_pin_tracking] = LOW;
+        pinState[pin_tracking] = LOW;
         digitalWrite(stepPin+1,LOW);
-        pinState[step_pin_tracking+1] = LOW;
+        pinState[pin_tracking+1] = LOW;
       }
     }
 }

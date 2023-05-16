@@ -48,12 +48,6 @@ class MidiFile {
             uint32_t deltaTick = 0;
             uint32_t absTick = 0;
         };
-        struct MidiNote {
-            TMidiEvent eventType;
-            uint8_t device = 0;
-            uint8_t eventData[2];
-            uint32_t absTime = 0;
-        };
         struct MidiTrack {
             String trackName;
             String instName;
@@ -349,26 +343,6 @@ class MidiFile {
             }
         }
 
-        /*/ Convert MIDI events into notes
-        for (auto& track : vecTracks) {
-            uint32_t wallTime = 0;
-            std::vector<MidiNote> vecNotesBeingProcessed;
-
-            for (auto& event : track.vecEvents) {
-                wallTime += event.deltaTick;
-
-                switch (event.eventType) {
-                    case TMidiEvent::NoteOn:
-                        // new note
-                        vecNotesBeingProcessed.push_back({ TMidiEvent::NoteOn})
-                        break;
-
-                    case TMidiEvent::NoteOff:
-
-                        break;
-                }
-            }
-        }*/
         Serial.printf("END PARSE");
         return true;
     }  

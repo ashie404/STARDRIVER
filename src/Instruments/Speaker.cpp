@@ -36,8 +36,8 @@ namespace instruments {
           pinState[i] = LOW;
         }
 
-        // initalize timer to the configured resolution and attach to tick function
-        Timer::setup(TMR_RES, tick); 
+        // TODO: make speakerr work
+        Timer::setup(TMR_RES, tick);
 
         #ifdef INIT_SOUND
         delay(500);
