@@ -33,7 +33,10 @@ SerialController controller = SerialController(instrument);
 // CORE 0
 void setup() {
   pinMode(25, OUTPUT);
-
+  #ifndef MULTICORE
+    // if multicore is not enabled, set up instruments to run on core 0
+    instrument->setup();
+  #endif
   controller.setup();
 }
 
@@ -47,6 +50,7 @@ void loop() {
   #endif
 }
 
+#ifdef MULTICORE
 // CORE 1
 void setup1() {
   instrument->setup();
@@ -55,3 +59,4 @@ void setup1() {
 void loop1() {
 
 }
+#endif

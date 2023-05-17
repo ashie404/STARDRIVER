@@ -7,7 +7,8 @@
 #ifndef STARDRIVER_SRC_CONFIG_H_
 #define STARDRIVER_SRC_CONFIG_H_
 
-#include "Instruments/Instrument.h"
+// whether to utilize both cores of the RP2040 or not
+#define MULTICORE
 
 // whether to play an init sound as instruments initalize themselves.
 #define INIT_SOUND
@@ -30,7 +31,6 @@ const byte FDD_PINS[10][2] = {{0,1}, {2,3}, {4,5}, {6,7}, {8,9}, {10,11}, {12,13
 // pins speaker(s) are attached to
 const byte SPK_PINS[2] = {20, 21};
 const byte SPK_ADDR_RANGE[] = {10, 11}; // Address range that speakers use, doesn't matter what it's set to if disabled.
-
 
 /// Controller you will use (currently only onboard MIDI and Moppy serial supported)
 
