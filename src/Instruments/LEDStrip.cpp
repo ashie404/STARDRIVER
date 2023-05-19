@@ -1,0 +1,1 @@
+// TODO: implement LED strip instrument functionality

@@ -20,6 +20,14 @@ Instrument *instrument = new instruments::FDD();
 Instrument *instrument = new instruments::Speaker();
 #endif
 
+#ifdef INSTRUMENT_LEDSTRIP
+#include <Adafruit_NeoPixel.h>
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LED, LED_PIN, NEO_RGBW + NEO_KHZ800);
+
+#include "Instruments/LEDStrip.h"
+//Instrument *ledstrip = new instruments::LEDStrip(); not yet implemented
+#endif
+
 #ifdef CTRL_MIDI
 #include "Controllers/MidiController.h"
 MidiController controller = MidiController(instrument);
@@ -34,8 +42,8 @@ SerialController controller = SerialController(instrument);
 void setup() {
   pinMode(25, OUTPUT);
   #ifndef MULTICORE
-    // if multicore is not enabled, set up instruments to run on core 0
-    instrument->setup();
+  // if multicore is not enabled, set up instruments to run on core 0
+  instrument->setup();
   #endif
   controller.setup();
 }
@@ -43,7 +51,7 @@ void setup() {
 void loop() {
   digitalWrite(25, HIGH);
   #ifdef CTRL_MIDI
-  //controller.playMidi();
+  //controller.playMidi(); not yet implemented
   #endif
   #ifdef CTRL_SERIAL
   controller.readPort();
@@ -54,6 +62,12 @@ void loop() {
 // CORE 1
 void setup1() {
   instrument->setup();
+  #ifdef INSTRUMENT_LEDSTRIP
+  // initalize neopixels
+  strip.begin();
+  strip.setBrightness(50);
+  strip.show();
+  #endif
 }
 
 void loop1() {

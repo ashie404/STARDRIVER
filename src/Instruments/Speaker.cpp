@@ -25,7 +25,7 @@ namespace instruments {
     void Speaker::setup() {
         // initalize speaker(s)
         for (int i=0; i < NUM_SPK; i++) {
-            pinMode(SPK_PINS[i], OUTPUT_12MA);
+            pinMode(SPK_PINS[i], OUTPUT);
         }
 
         // initalize all arrays (i hate c++ sometimes)
