@@ -21,11 +21,8 @@ Instrument *instrument = new instruments::Speaker();
 #endif
 
 #ifdef INSTRUMENT_LEDSTRIP
-#include <Adafruit_NeoPixel.h>
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LED, LED_PIN, NEO_RGBW + NEO_KHZ800);
-
 #include "Instruments/LEDStrip.h"
-//Instrument *ledstrip = new instruments::LEDStrip(); not yet implemented
+Instrument *ledstrip = new instruments::LEDStrip();
 #endif
 
 #ifdef CTRL_MIDI
@@ -63,10 +60,7 @@ void loop() {
 void setup1() {
   instrument->setup();
   #ifdef INSTRUMENT_LEDSTRIP
-  // initalize neopixels
-  strip.begin();
-  strip.setBrightness(50);
-  strip.show();
+  ledstrip->setup();
   #endif
 }
 

@@ -35,6 +35,7 @@ const byte SPK_ADDR_RANGE[] = {10, 11}; // Address range that speakers use, does
 #define INSTRUMENT_LEDSTRIP // enable lightshow effects (using NeoPixel/WS2812x LEDs, meant for use with RGBW neopixels)
 #define LED_PIN 22 // data pin the LEDs are connected to
 #define NUM_LED 48 // number of LEDs total
+#define LED_MODE (NEO_RGBW + NEO_KHZ800) // led strip bitstream config
 
 /// Controller you will use (currently only onboard MIDI and Moppy serial supported)
 
