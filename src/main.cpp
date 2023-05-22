@@ -10,14 +10,21 @@
 #include "Instruments/Instrument.h"
 #include "Controllers/Controller.h"
 
+//// Instruments
+
+// main "instrument" 
+// (a distributor instrument class used to transmit events coming in from the controllers to their respective instrument devices)
+#include "Instruments/EventDist.h"
+Instrument *eventDist = new instruments::EventDist();
+
 #ifdef INSTRUMENT_FDD
 #include "Instruments/FDD.h"
-Instrument *instrument = new instruments::FDD();
+Instrument *fdd = new instruments::FDD();
 #endif
 
 #ifdef INSTRUMENT_SPK
 #include "Instruments/Speaker.h"
-Instrument *instrument = new instruments::Speaker();
+Instrument *speaker = new instruments::Speaker();
 #endif
 
 #ifdef INSTRUMENT_LEDSTRIP
@@ -25,28 +32,36 @@ Instrument *instrument = new instruments::Speaker();
 Instrument *ledstrip = new instruments::LEDStrip();
 #endif
 
+//// Controllers
+
 #ifdef CTRL_MIDI
 #include "Controllers/MidiController.h"
-MidiController controller = MidiController(instrument);
+MidiController controller = MidiController(eventDist);
 #endif
 
 #ifdef CTRL_SERIAL
 #include "Controllers/SerialController.h"
-SerialController controller = SerialController(instrument);
+SerialController controller = SerialController(eventDist);
 #endif
 
 // CORE 0
 void setup() {
-  pinMode(25, OUTPUT);
   #ifndef MULTICORE
-  // if multicore is not enabled, set up instruments to run on core 0
-  instrument->setup();
+    // if multicore is not enabled, set up instruments to run on core 0
+    #ifdef INSTRUMENT_FDD
+    fdd->setup();
+    #endif
+    #ifdef INSTRUMENT_SPK
+    speaker->setup();
+    #endif
+    #ifdef INSTRUMENT_LEDSTRIP
+    ledstrip->setup();
+    #endif
   #endif
   controller.setup();
 }
 
 void loop() {
-  digitalWrite(25, HIGH);
   #ifdef CTRL_MIDI
   //controller.playMidi(); not yet implemented
   #endif
@@ -58,7 +73,12 @@ void loop() {
 #ifdef MULTICORE
 // CORE 1
 void setup1() {
-  instrument->setup();
+  #ifdef INSTRUMENT_FDD
+  fdd->setup();
+  #endif
+  #ifdef INSTRUMENT_SPK
+  speaker->setup();
+  #endif
   #ifdef INSTRUMENT_LEDSTRIP
   ledstrip->setup();
   #endif
