@@ -15,6 +15,7 @@
 namespace instruments {
     class LEDStrip : public Instrument {
         public:
+            Adafruit_NeoPixel strip;
             void setup();
 
         protected:
@@ -30,7 +31,6 @@ namespace instruments {
 
         private:
             static uint8_t ledState[][4];
-            static Adafruit_NeoPixel strip;
 
             static void stopAll();
             static void reset();

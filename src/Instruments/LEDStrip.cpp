@@ -11,24 +11,14 @@ namespace instruments {
     // Array that keeps track of the current color of each LED
     uint8_t LEDStrip::ledState[NUM_LED][4] = {};
 
-    // LED strip object
-    static Adafruit_NeoPixel strip;
-
     // LED strip initalization code
-
+    
     void LEDStrip::setup() {
-        strip = Adafruit_NeoPixel(NUM_LED, LED_PIN, LED_MODE);
+        strip = Adafruit_NeoPixel(Adafruit_NeoPixel(NUM_LED, LED_PIN, LED_MODE));
 
         strip.begin();
         strip.setBrightness(50);
         strip.show();
-
-        #ifdef INIT_SOUND
-        initDisplay();
-        #endif
-        reset();
-        delay(1000);
-
     }
 
     void LEDStrip::initDisplay() {
@@ -68,6 +58,6 @@ namespace instruments {
 
     void LEDStrip::reset()
     {
-        strip.fill(strip.Color(0,0,0,0), 0, NUM_LED-1); // turn off all LEDs on strip
+        //strip->fill(strip.Color(0,0,0,0), 0, NUM_LED-1); // turn off all LEDs on strip (broken rn)
     }
 }

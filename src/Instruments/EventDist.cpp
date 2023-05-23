@@ -9,37 +9,63 @@
 namespace instruments {
     // Event distributor init code
     void EventDist::setup() {
-        
+        // setup doesn't really do anything on its own
     }
 
-    // Controller message handling
+    void EventDist::configure(Instrument* allInst[]) {
+        // C++ not letting you assign arrays is pretty stupid ngl (yes i know you can use std arrays I Dont Want To)
+        for (int i = 0; i < MAX_INST; i++) {
+            _all_inst[i] = allInst[i];
+        }
+    }
+
+    void EventDist::handleCtrlMessage(uint8_t command, uint8_t payload[]) {
+        // send controller message to every instrument
+        for (int i = 0; i < MAX_INST; i++) {
+            if (_all_inst[i] != 0)
+                _all_inst[i]->handleCtrlMessage(command, payload);
+        }
+    }
+
+    void EventDist::handleMidiEvent(uint8_t devAddress, uint8_t event, uint8_t message[]) {
+        // TODO: this is kinda janky. is there a better way to do this?
+        #ifdef INSTRUMENT_FDD
+        if (FDD_ADDR_RANGE[1] >= devAddress >= FDD_ADDR_RANGE[0]) {
+            _all_inst[0]->handleMidiEvent(devAddress-FDD_ADDR_RANGE[0], event, message);
+        }
+        #endif
+        #ifdef INSTRUMENT_SPK
+        if (SPK_ADDR_RANGE[1] >= devAddress >= SPK_ADDR_RANGE[0]) {
+            _all_inst[1]->handleMidiEvent(devAddress-SPK_ADDR_RANGE[0], event, message);
+        }
+        #endif
+        #ifdef INSTRUMENT_LEDSTRIP
+        if (LED_ADDR_RANGE[1] >= devAddress >= LED_ADDR_RANGE[0]) {
+            _all_inst[2]->handleMidiEvent(devAddress-LED_ADDR_RANGE[0], event, message);
+        }
+        #endif
+    }
+
+    // these will never be called, but c++ get angy if u dont implement them
     void EventDist::ctrl_reset() {
-      // Send reset to all instruments
     }
 
     void EventDist::ctrl_stop() {
-      // Send stop to all instruments
     }
 
-    // MIDI/device message handling
-
     void EventDist::dev_reset(uint8_t devAddress) {
-        // send reset to respective instrument
     }
 
     void EventDist::midi_noteOn(uint8_t devAddress, uint8_t message[]) {
-        // send midi note on to respective instrument
     }
 
     void EventDist::midi_noteOff(uint8_t devAddress, uint8_t message[]) {
-        // send midi note off to respective instrument
     }
 
     void EventDist::midi_pitchBend(uint8_t devAddress, uint8_t message[]) {
-        // send midi pitch bend to respective instrument
     }
 
     void EventDist::midiEvent(uint8_t subAddress, uint8_t command, uint8_t message[]) {
-        // send midi event to respective instrument
     }
+
 }

@@ -9,11 +9,16 @@
 #include <Arduino.h>
 #include "Instrument.h"
 #include "../Config.h"
+#include <stdio.h>
+#include "pico/stdlib.h"
 
 namespace instruments {
     class EventDist : public Instrument {
         public:
             void setup();
+            void handleCtrlMessage(uint8_t command, uint8_t payload[]) override;
+            void handleMidiEvent(uint8_t devAddress, uint8_t event, uint8_t message[]) override;
+            void configure(Instrument* allInst[]);
 
         protected:
             void ctrl_stop() override;
@@ -25,6 +30,9 @@ namespace instruments {
             void midi_pitchBend(uint8_t devAddress, uint8_t message[]) override;
             
             void midiEvent(uint8_t devAddress, uint8_t event, uint8_t message[]);
+
+        private:
+            Instrument* _all_inst[MAX_INST];          
     };
 }
 

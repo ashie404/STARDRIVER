@@ -25,7 +25,7 @@ const byte FDD_ADDR_RANGE[] = {0, 9}; // Address range that floppy drives use, d
 // pins drive(s) are attached to {step, direction}
 const byte FDD_PINS[10][2] = {{0,1}, {2,3}, {4,5}, {6,7}, {8,9}, {10,11}, {12,13}, {14,15}, {16,17}, {18,19}};
 
-//#define INSTRUMENT_SPK
+#define INSTRUMENT_SPK
 #define NUM_SPK 2
 
 // pins speaker(s) are attached to
@@ -36,12 +36,17 @@ const byte SPK_ADDR_RANGE[] = {10, 11}; // Address range that speakers use, does
 #define LED_PIN 22 // data pin the LEDs are connected to
 #define NUM_LED 48 // number of LEDs total
 #define LED_MODE (NEO_RGBW + NEO_KHZ800) // led strip bitstream config
+const byte LED_ADDR_RANGE[] = {0, 11}; /* LED strip address range, determines which events are sent to LEDs and which are not.
+    recommended to just be the range of all addresses your regular instruments will use, 
+    but can function as its own entirely independent instrument if needed. Again, doesn't matter what set to if disabled. */
 
 /// Controller you will use (currently only onboard MIDI and Moppy serial supported)
 
 //#define CTRL_MIDI // NOT YET IMPLEMENTED
 #define CTRL_SERIAL
 
+//// These are values not really meant to be end-user modifiable, proceed at your own risk
 
+#define MAX_INST 3 // max number of instruments, determines size of all instruments array in event distributor
 
 #endif
