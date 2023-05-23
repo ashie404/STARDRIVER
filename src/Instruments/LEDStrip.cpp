@@ -14,7 +14,7 @@ namespace instruments {
     // LED strip initalization code
     
     void LEDStrip::setup() {
-        strip = Adafruit_NeoPixel(Adafruit_NeoPixel(NUM_LED, LED_PIN, LED_MODE));
+        strip = Adafruit_NeoPixel(NUM_LED, LED_PIN, LED_MODE);
 
         strip.begin();
         strip.setBrightness(50);
