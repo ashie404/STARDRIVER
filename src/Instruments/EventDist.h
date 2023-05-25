@@ -18,7 +18,7 @@ namespace instruments {
         public:
             void setup();
             void setup(Instrument* allInst[]);
-            void handleCtrlMessage(uint8_t command, uint8_t payload[]) override;
+            void handleCtrlMessage(uint8_t command, uint8_t message[]) override;
             void handleMidiEvent(uint8_t devAddress, uint8_t event, uint8_t message[]) override;
             Instrument* _all_inst[MAX_INST];       
 

@@ -119,9 +119,9 @@ namespace instruments {
         spkPeriod[devAddress] = originalPeriod[devAddress] = 0;
     }
 
-    void Speaker::midi_pitchBend(uint8_t devAddress, uint8_t payload[]) {
+    void Speaker::midi_pitchBend(uint8_t devAddress, uint8_t message[]) {
         // A value from -8192 to 8191 representing the pitch deflection
-        int16_t bendDeflection = payload[0] << 8 | payload[1];
+        int16_t bendDeflection = message[0] << 8 | message[1];
 
         // A whole octave of bend would double the frequency (halve the the period) of notes
         // Calculate bend based on BEND_OCTAVES from MoppyInstrument.h and percentage of deflection
@@ -129,7 +129,7 @@ namespace instruments {
         spkPeriod[devAddress] = originalPeriod[devAddress] / pow(2.0, BEND_OCT * (bendDeflection / (float)8192));
     }
 
-    void Speaker::midiEvent(uint8_t subAddress, uint8_t command, uint8_t payload[]) {
+    void Speaker::midiEvent(uint8_t subAddress, uint8_t command, uint8_t message[]) {
     }
 
     // Speaker timing and driving functions

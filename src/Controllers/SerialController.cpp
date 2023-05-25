@@ -68,7 +68,7 @@ void SerialController::readPort() {
             messagePos++;
             break;
         case 4:
-            // Read command and payload
+            // Read command and message
             Serial.readBytes(messageBuffer + 4, messageBuffer[3]);
 
             // Call appropriate handler

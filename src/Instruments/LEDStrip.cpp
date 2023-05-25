@@ -22,10 +22,21 @@ namespace instruments {
         strip.begin();
         strip.setBrightness(50);
         strip.show();
+
+        #ifdef INIT_SOUND
+        initDisplay();
+        #endif
     }
 
     void LEDStrip::initDisplay() {
-      // TODO: cool init animation for LED strip
+        for (int i = 0; i < 256; i++) {
+            for (int led = 0; led <= NUM_LED; led++) {
+                strip.setPixelColor(led, i <= 128 ? strip.Color(0,0,0,i) : strip.Color(0,0,0,256-i));
+            }
+            strip.show();
+            delay(10);
+        }
+        
     }
 
     // Controller message handling

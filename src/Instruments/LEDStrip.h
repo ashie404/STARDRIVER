@@ -35,7 +35,7 @@ namespace instruments {
 
             static void stopAll();
             void reset();
-            static void initDisplay();
+            void initDisplay();
     };
 }
 

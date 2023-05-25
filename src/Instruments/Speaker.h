@@ -35,7 +35,7 @@ namespace instruments {
             static unsigned int dutyCycle[];
             static unsigned int spkTickCount[];
             static unsigned int originalPeriod[];
-            static PWMAudio pwmDevices[];
+            //static PWMAudio pwmDevices[];
 
             // Max note the speakers are allowed to play.
             static const byte MAX_SPK_NOTE = 128;

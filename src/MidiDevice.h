@@ -13,7 +13,7 @@ class MidiDevice {
     public:
         static void tick();
         
-        virtual void handleCtrlMessage(uint8_t command, uint8_t payload[]) {
+        virtual void handleCtrlMessage(uint8_t command, uint8_t message[]) {
             switch (command) {
             
                 case CTRL_START: // Controller start playing
@@ -26,7 +26,7 @@ class MidiDevice {
                     ctrl_reset();
                     break;
                 default:
-                    controlMessage(command, payload);
+                    controlMessage(command, message);
                     break;
             }
         };

@@ -17,11 +17,11 @@ namespace instruments {
         }
     }
 
-    void EventDist::handleCtrlMessage(uint8_t command, uint8_t payload[]) {
+    void EventDist::handleCtrlMessage(uint8_t command, uint8_t message[]) {
         // send controller message to every instrument
         for (int i = 0; i < MAX_INST; i++) {
             if (_all_inst[i] != 0)
-                _all_inst[i]->handleCtrlMessage(command, payload);
+                _all_inst[i]->handleCtrlMessage(command, message);
         }
     }
 
