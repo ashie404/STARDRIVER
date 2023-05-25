@@ -141,9 +141,6 @@ namespace instruments {
                   togglePin(s, SPK_PINS[s]);
                   spkTickCount[s] = 0;
               }
-              if (dutyCycle[s] > 1 && spkTickCount[s] >= spkPeriod[s]/dutyCycle[s]) { // fucked up way to do pulse waves
-                togglePin(s, SPK_PINS[s]);
-              }
           }
       }
     }
