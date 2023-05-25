@@ -89,15 +89,17 @@ static void tickAll() {
 
 // CORE 0
 void setup() {
+  pinMode(25, OUTPUT); // set up pico led to use as ready light
   #ifndef MULTICORE
     // if multicore is not enabled, set up instruments to run on core 0
     setupInstruments();
-
-    // set up timer with all instruments tick functions
-    Timer::setup(TMR_RES, tickAll);
   #endif
 
+  // set up timer with all instruments tick functions
+  Timer::setup(TMR_RES, tickAll);
+
   controller.setup();
+  digitalWrite(25, HIGH); // ready to recieve serial messages
 }
 
 void loop() {
@@ -114,9 +116,6 @@ void loop() {
 void setup1() {
   // set up instruments
   setupInstruments();
-
-  // set up timer with all instruments tick functions
-  Timer::setup(TMR_RES, tickAll);
 }
 
 void loop1() {

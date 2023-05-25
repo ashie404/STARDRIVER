@@ -76,10 +76,6 @@ namespace instruments {
           lastRun = millis();
           for (byte d = 0; d < NUM_SPK; d++) {
           spkPeriod[d] = chargeNotes[i];
-          if (d == 1) {
-            pinMode(25, OUTPUT);
-            digitalWrite(25, HIGH);
-          }
           }
           i++;
         }
