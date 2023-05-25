@@ -37,7 +37,7 @@ class SerialController {
     MidiDevice* targetDevice;
     uint8_t messagePos = 0; // Track current message read position
     uint8_t messageBuffer[259]; // Max message length for Moppy messages is 259
-    uint8_t pongBytes[8] = {0x4d, 0x00, 0x00, 0x04, 0x81, 0x01, 0x00, NUM_FDD-1};
+    uint8_t pongBytes[8] = {0x4d, 0x00, 0x00, 0x04, 0x81, 0x01, 0x00, MAX_DEV_ADDR};
     void sendPong();
 };
 

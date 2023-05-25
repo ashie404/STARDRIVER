@@ -22,12 +22,12 @@ instruments::EventDist *eventDist = new instruments::EventDist();
 
 #ifdef INSTRUMENT_FDD
 #include "Instruments/FDD.h"
-Instrument *fdd = new instruments::FDD();
+instruments::FDD *fdd = new instruments::FDD();
 #endif
 
 #ifdef INSTRUMENT_SPK
 #include "Instruments/Speaker.h"
-Instrument *speaker = new instruments::Speaker();
+instruments::Speaker *speaker = new instruments::Speaker();
 #endif
 
 #ifdef INSTRUMENT_LEDSTRIP
@@ -49,6 +49,7 @@ SerialController controller = SerialController(eventDist);
 
 // setupInstruments helper function
 void setupInstruments() {
+
   Instrument* allInst[3] = {0,0,0};
   #ifdef INSTRUMENT_FDD
   fdd->setup();
@@ -62,9 +63,27 @@ void setupInstruments() {
   ledstrip->setup();
   allInst[2] = ledstrip;
   #endif
-    // configure event distributor with all instruments
-  eventDist->configure(allInst);
+
+  // configure event distributor with all instruments
+  eventDist->setup(allInst);
 }
+
+// woo i love janky solutions
+// i guess its optimized though?
+#pragma GCC push_options
+#pragma GCC optimize("Ofast")
+static void tickAll() {
+  #ifdef INSTRUMENT_FDD
+  fdd->tick();
+  #endif
+  #ifdef INSTRUMENT_SPK
+  speaker->tick();
+  #endif
+  #ifdef INSTRUMENT_LEDSTRIP
+  ledstrip->tick();
+  #endif
+}
+#pragma GCC pop_options
 
 //// Main
 
@@ -76,6 +95,9 @@ void setup() {
   #endif
 
   controller.setup();
+
+  // set up timer with all instruments tick functions
+  Timer::setup(TMR_RES, tickAll);
 }
 
 void loop() {

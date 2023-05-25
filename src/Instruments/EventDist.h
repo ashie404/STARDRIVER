@@ -11,14 +11,16 @@
 #include "../Config.h"
 #include <stdio.h>
 #include "pico/stdlib.h"
+#include "Timer.h"
 
 namespace instruments {
     class EventDist : public Instrument {
         public:
             void setup();
+            void setup(Instrument* allInst[]);
             void handleCtrlMessage(uint8_t command, uint8_t payload[]) override;
             void handleMidiEvent(uint8_t devAddress, uint8_t event, uint8_t message[]) override;
-            void configure(Instrument* allInst[]);
+            Instrument* _all_inst[MAX_INST];       
 
         protected:
             void ctrl_stop() override;
@@ -32,7 +34,7 @@ namespace instruments {
             void midiEvent(uint8_t devAddress, uint8_t event, uint8_t message[]);
 
         private:
-            Instrument* _all_inst[MAX_INST];          
+               
     };
 }
 

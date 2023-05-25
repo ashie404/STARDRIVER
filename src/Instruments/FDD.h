@@ -15,6 +15,7 @@ namespace instruments {
     class FDD : public Instrument {
         public:
             void setup();
+            static void tick();
 
         protected:
             void ctrl_stop() override;
@@ -43,7 +44,6 @@ namespace instruments {
             static void togglePin(byte driveNum, byte step_pin, byte direction_pin);
             static void stopAll();
             static void reset(byte driveNum);
-            static void tick();
             static void initSound(byte driveNum);
     };
 }

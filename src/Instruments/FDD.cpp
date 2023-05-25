@@ -52,8 +52,6 @@ namespace instruments {
         resetAll();
         delay(1000); // wait a bit so we dont break things
 
-        Timer::setup(TMR_RES, tick); // initalize timer to the configured resolution and attach to tick function
-
         #ifdef INIT_SOUND
         delay(500);
         initSound(0xFF); // init sound on all drives

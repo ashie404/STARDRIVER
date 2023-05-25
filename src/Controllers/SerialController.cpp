@@ -56,7 +56,7 @@ void SerialController::readPort() {
         case 2:
             messageBuffer[2] = Serial.read(); // Read sub address
 
-            if (messageBuffer[2] == 0x00 || (messageBuffer[2] >= 0x00 && messageBuffer[2] <= NUM_FDD-1)) {
+            if (messageBuffer[2] == 0x00 || (messageBuffer[2] >= 0x00 && messageBuffer[2] <= MAX_DEV_ADDR)) {
                 messagePos++; // Valid subAddress, continue
                 break;
             }

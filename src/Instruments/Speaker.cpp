@@ -14,6 +14,9 @@ namespace instruments {
     // Current note period assigned to each speaker, 0 being off.
     unsigned int Speaker::spkPeriod[NUM_SPK] = {};
 
+    // Current duty cycle assigned to each speaker.
+    unsigned int Speaker::dutyCycle[NUM_SPK] = {};
+
     // Tracks the tick counter for each speaker
     unsigned int Speaker::spkTickCount[NUM_SPK] = {};
 
@@ -21,20 +24,21 @@ namespace instruments {
     unsigned int Speaker::originalPeriod[NUM_SPK] = {};
 
     // PWM audio devices for each speaker
-    PWMAudio Speaker::pwmDevices[NUM_SPK] = {};
+    //PWMAudio Speaker::pwmDevices[NUM_SPK] = {};
 
     // Speaker initalization code
 
     void Speaker::setup() {
         // initalize speaker(s)
         for (int i=0; i < NUM_SPK; i++) {
-            //pinMode(SPK_PINS[i], OUTPUT);
-            pwmDevices[i] = PWMAudio(SPK_PINS[i]);
+            pinMode(SPK_PINS[i], OUTPUT);
+            //pwmDevices[i] = PWMAudio(SPK_PINS[i]);
         }
 
         // initalize all arrays (i hate c++ sometimes)
         for (int i = 0; i < NUM_SPK; i++) {
           spkPeriod[i] = 0;
+          dutyCycle[i] = 1;
           spkTickCount[i] = 0;
           originalPeriod[i] = 0;
           pinState[i] = LOW;
@@ -53,7 +57,41 @@ namespace instruments {
     }
 
     void Speaker::initSound(byte spkNum) {
-      // todo: implement speaker init sound
+      unsigned int chargeNotes[] = {
+          noteDoubleTicks[46],
+          noteDoubleTicks[42],
+          noteDoubleTicks[41],
+          noteDoubleTicks[34],
+          noteDoubleTicks[27],
+          noteDoubleTicks[30],
+          noteDoubleTicks[34],
+          noteDoubleTicks[37],
+          0
+      };
+      if (spkNum == 0xFF) { // if address is 0xFF (255) startup sound on all drives
+      byte i = 0;
+      unsigned long lastRun = 0;
+      while(i < 9) {
+        if (millis() - 175 > lastRun) {
+          lastRun = millis();
+          for (byte d = 0; d < NUM_SPK; d++) {
+          spkPeriod[d] = chargeNotes[i];
+          if (d == 1) {
+            pinMode(25, OUTPUT);
+            digitalWrite(25, HIGH);
+          }
+          }
+          i++;
+        }
+      }} else {
+      byte i = 0;
+      unsigned long lastRun = 0;
+      while(i < 9) {
+        if (millis() - 175 > lastRun) {
+          lastRun = millis();
+          spkPeriod[spkNum] = chargeNotes[i++];
+        }
+      }}
     }
 
     // Controller message handling
@@ -106,6 +144,9 @@ namespace instruments {
               if (spkTickCount[s] >= spkPeriod[s]) {
                   togglePin(s, SPK_PINS[s]);
                   spkTickCount[s] = 0;
+              }
+              if (dutyCycle[s] > 1 && spkTickCount[s] >= spkPeriod[s]/dutyCycle[s]) { // fucked up way to do pulse waves
+                togglePin(s, SPK_PINS[s]);
               }
           }
       }

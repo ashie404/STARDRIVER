@@ -11,6 +11,8 @@
 
 class MidiDevice {
     public:
+        static void tick();
+        
         virtual void handleCtrlMessage(uint8_t command, uint8_t payload[]) {
             switch (command) {
             

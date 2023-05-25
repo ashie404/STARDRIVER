@@ -32,6 +32,7 @@ namespace instruments {
         private:
             static int pinState[];
             static unsigned int spkPeriod[];
+            static unsigned int dutyCycle[];
             static unsigned int spkTickCount[];
             static unsigned int originalPeriod[];
             static PWMAudio pwmDevices[];

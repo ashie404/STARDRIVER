@@ -45,6 +45,8 @@ const byte LED_ADDR_RANGE[] = {0, 11}; /* LED strip address range, determines wh
 //#define CTRL_MIDI // NOT YET IMPLEMENTED
 #define CTRL_SERIAL
 
+#define MAX_DEV_ADDR 11 // the highest device address you will use
+
 //// These are values not really meant to be end-user modifiable, proceed at your own risk
 
 #define MAX_INST 3 // max number of instruments, determines size of all instruments array in event distributor

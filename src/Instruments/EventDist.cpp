@@ -11,9 +11,7 @@ namespace instruments {
     void EventDist::setup() {
         // setup doesn't really do anything on its own
     }
-
-    void EventDist::configure(Instrument* allInst[]) {
-        // C++ not letting you assign arrays is pretty stupid ngl (yes i know you can use std arrays I Dont Want To)
+    void EventDist::setup(Instrument* allInst[]) {
         for (int i = 0; i < MAX_INST; i++) {
             _all_inst[i] = allInst[i];
         }
@@ -30,17 +28,17 @@ namespace instruments {
     void EventDist::handleMidiEvent(uint8_t devAddress, uint8_t event, uint8_t message[]) {
         // TODO: this is kinda janky. is there a better way to do this?
         #ifdef INSTRUMENT_FDD
-        if (FDD_ADDR_RANGE[1] >= devAddress >= FDD_ADDR_RANGE[0]) {
+        if (FDD_ADDR_RANGE[1] >= devAddress && devAddress >= FDD_ADDR_RANGE[0]) {
             _all_inst[0]->handleMidiEvent(devAddress-FDD_ADDR_RANGE[0], event, message);
         }
         #endif
         #ifdef INSTRUMENT_SPK
-        if (SPK_ADDR_RANGE[1] >= devAddress >= SPK_ADDR_RANGE[0]) {
+        if (SPK_ADDR_RANGE[1] >= devAddress && devAddress >= SPK_ADDR_RANGE[0]) {
             _all_inst[1]->handleMidiEvent(devAddress-SPK_ADDR_RANGE[0], event, message);
         }
         #endif
         #ifdef INSTRUMENT_LEDSTRIP
-        if (LED_ADDR_RANGE[1] >= devAddress >= LED_ADDR_RANGE[0]) {
+        if (LED_ADDR_RANGE[1] >= devAddress && devAddress >= LED_ADDR_RANGE[0]) {
             _all_inst[2]->handleMidiEvent(devAddress-LED_ADDR_RANGE[0], event, message);
         }
         #endif
@@ -67,5 +65,4 @@ namespace instruments {
 
     void EventDist::midiEvent(uint8_t subAddress, uint8_t command, uint8_t message[]) {
     }
-
 }

@@ -17,6 +17,7 @@ namespace instruments {
         public:
             Adafruit_NeoPixel strip;
             void setup();
+            static void tick();
 
         protected:
             void ctrl_stop() override;
@@ -34,7 +35,6 @@ namespace instruments {
 
             static void stopAll();
             void reset();
-            static void tick();
             static void initDisplay();
     };
 }
