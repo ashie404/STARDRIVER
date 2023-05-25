@@ -7,6 +7,7 @@
 #define STARDRIVER_INSTRUMENTS_SPEAKER_H_
 
 #include <Arduino.h>
+#include <PWMAudio.h>
 #include "Instrument.h"
 #include "Timer.h"
 #include "../Config.h"
@@ -15,6 +16,7 @@ namespace instruments {
     class Speaker : public Instrument {
         public:
             void setup();
+            static void tick();
 
         protected:
             void ctrl_stop() override;
@@ -32,6 +34,7 @@ namespace instruments {
             static unsigned int spkPeriod[];
             static unsigned int spkTickCount[];
             static unsigned int originalPeriod[];
+            static PWMAudio pwmDevices[];
 
             // Max note the speakers are allowed to play.
             static const byte MAX_SPK_NOTE = 128;
@@ -39,7 +42,6 @@ namespace instruments {
             static void togglePin(byte spkNum, byte pin);
             static void stopAll();
             static void reset(byte spkNum);
-            static void tick();
             static void initSound(byte spkNum);
     };
 }

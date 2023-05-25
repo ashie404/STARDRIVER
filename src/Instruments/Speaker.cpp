@@ -20,12 +20,16 @@ namespace instruments {
     // Original note period before pitch bending events
     unsigned int Speaker::originalPeriod[NUM_SPK] = {};
 
+    // PWM audio devices for each speaker
+    PWMAudio Speaker::pwmDevices[NUM_SPK] = {};
+
     // Speaker initalization code
 
     void Speaker::setup() {
         // initalize speaker(s)
         for (int i=0; i < NUM_SPK; i++) {
-            pinMode(SPK_PINS[i], OUTPUT);
+            //pinMode(SPK_PINS[i], OUTPUT);
+            pwmDevices[i] = PWMAudio(SPK_PINS[i]);
         }
 
         // initalize all arrays (i hate c++ sometimes)
@@ -37,7 +41,6 @@ namespace instruments {
         }
 
         // TODO: make speakerr work
-        Timer::setup(TMR_RES, tick);
 
         #ifdef INIT_SOUND
         delay(500);
@@ -50,37 +53,7 @@ namespace instruments {
     }
 
     void Speaker::initSound(byte spkNum) {
-      unsigned int chargeNotes[] = {
-          noteDoubleTicks[46],
-          noteDoubleTicks[42],
-          noteDoubleTicks[41],
-          noteDoubleTicks[34],
-          noteDoubleTicks[27],
-          noteDoubleTicks[30],
-          noteDoubleTicks[34],
-          noteDoubleTicks[37],
-          0
-      };
-      if (spkNum == 0xFF) { // if address is 0xFF (255) startup sound on all speakers
-      byte i = 0;
-      unsigned long lastRun = 0;
-      while(i < 9) {
-        if (millis() - 175 > lastRun) {
-          lastRun = millis();
-          for (byte d = 0; d < NUM_SPK; d++) {
-          spkPeriod[d] = chargeNotes[i];
-          }
-          i++;
-        }
-      }} else {
-      byte i = 0;
-      unsigned long lastRun = 0;
-      while(i < 9) {
-        if (millis() - 175 > lastRun) {
-          lastRun = millis();
-          spkPeriod[spkNum] = chargeNotes[i++];
-        }
-      }}
+      // todo: implement speaker init sound
     }
 
     // Controller message handling

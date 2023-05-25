@@ -11,6 +11,9 @@ namespace instruments {
     // Array that keeps track of the current color of each LED
     uint8_t LEDStrip::ledState[NUM_LED][4] = {};
 
+    // various visualizer vars
+    int wTracking = 0;
+
     // LED strip initalization code
     
     void LEDStrip::setup() {
@@ -41,10 +44,16 @@ namespace instruments {
     }
 
     void LEDStrip::midi_noteOn(uint8_t devAddress, uint8_t message[]) {
+        wTracking += 30;
+        strip.fill(strip.Color(0,0,0,wTracking), 0, NUM_LED);
+        strip.show();
         // TODO: implement lighting effects on note on
     }
 
     void LEDStrip::midi_noteOff(uint8_t devAddress, uint8_t message[]) {
+        wTracking -= 30;
+        strip.fill(strip.Color(0,0,0,wTracking), 0, NUM_LED);
+        strip.show();
         // TODO: implement lighting effects on note off
     }
 
@@ -56,8 +65,14 @@ namespace instruments {
         // maybe have special lighting effects tied to cc events so lightshows can be made fancier?
     }
 
-    void LEDStrip::reset()
-    {
-        //strip->fill(strip.Color(0,0,0,0), 0, NUM_LED-1); // turn off all LEDs on strip (broken rn)
+    void LEDStrip::reset() {
+        strip.fill(strip.Color(0,0,0,0), 0, NUM_LED-1); // turn off all LEDs on strip (broken rn)
     }
+
+    #pragma GCC push_options
+    #pragma GCC optimize("Ofast") // optimize the shit out of this since it's a timing interrupt function
+    void LEDStrip::tick() {
+        // todo: implement actual visualizer stuff
+    }
+    #pragma GCC pop_options
 }

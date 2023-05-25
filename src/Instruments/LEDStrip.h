@@ -33,7 +33,8 @@ namespace instruments {
             static uint8_t ledState[][4];
 
             static void stopAll();
-            static void reset();
+            void reset();
+            static void tick();
             static void initDisplay();
     };
 }

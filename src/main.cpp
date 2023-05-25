@@ -62,7 +62,7 @@ void setupInstruments() {
   ledstrip->setup();
   allInst[2] = ledstrip;
   #endif
-  // configure event distributor with all instruments
+    // configure event distributor with all instruments
   eventDist->configure(allInst);
 }
 

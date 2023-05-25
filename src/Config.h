@@ -35,7 +35,7 @@ const byte SPK_ADDR_RANGE[] = {10, 11}; // Address range that speakers use, does
 #define INSTRUMENT_LEDSTRIP // enable lightshow effects (using NeoPixel/WS2812x LEDs, meant for use with RGBW neopixels)
 #define LED_PIN 22 // data pin the LEDs are connected to
 #define NUM_LED 48 // number of LEDs total
-#define LED_MODE (NEO_RGBW + NEO_KHZ800) // led strip bitstream config
+#define LED_MODE (NEO_GRBW + NEO_KHZ800) // led strip bitstream config
 const byte LED_ADDR_RANGE[] = {0, 11}; /* LED strip address range, determines which events are sent to LEDs and which are not.
     recommended to just be the range of all addresses your regular instruments will use, 
     but can function as its own entirely independent instrument if needed. Again, doesn't matter what set to if disabled. */
