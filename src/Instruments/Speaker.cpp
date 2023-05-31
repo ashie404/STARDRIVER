@@ -14,6 +14,9 @@ namespace instruments {
     // Current note period assigned to each speaker, 0 being off.
     unsigned int Speaker::spkPeriod[NUM_SPK] = {};
 
+    // bullshit pulse wave method
+    bool Speaker::spkPulsed[NUM_SPK] = {};
+
     // Current duty cycle assigned to each speaker.
     unsigned int Speaker::dutyCycle[NUM_SPK] = {};
 
@@ -23,16 +26,12 @@ namespace instruments {
     // Original note period before pitch bending events
     unsigned int Speaker::originalPeriod[NUM_SPK] = {};
 
-    // PWM audio devices for each speaker
-    //PWMAudio Speaker::pwmDevices[NUM_SPK] = {};
-
     // Speaker initalization code
 
     void Speaker::setup() {
         // initalize speaker(s)
         for (int i=0; i < NUM_SPK; i++) {
             pinMode(SPK_PINS[i], OUTPUT);
-            //pwmDevices[i] = PWMAudio(SPK_PINS[i]);
         }
 
         // initalize all arrays (i hate c++ sometimes)
@@ -107,7 +106,7 @@ namespace instruments {
 
     void Speaker::midi_noteOn(uint8_t devAddress, uint8_t message[]) {
         if (message[0] <= MAX_SPK_NOTE) {
-            spkPeriod[devAddress] = originalPeriod[devAddress] = noteDoubleTicks[message[0]];
+            spkPeriod[devAddress] = originalPeriod[devAddress] = noteDoubleTicks[message[0]];  
         }
     }
 
@@ -140,6 +139,11 @@ namespace instruments {
               if (spkTickCount[s] >= spkPeriod[s]) {
                   togglePin(s, SPK_PINS[s]);
                   spkTickCount[s] = 0;
+                  spkPulsed[s] = false;
+              }
+              if (dutyCycle[s] > 1 && spkTickCount[s] >= spkPeriod[s]/dutyCycle[s] && !spkPulsed[s]) {
+                  togglePin(s, SPK_PINS[s]);
+                  spkPulsed[s] = true;
               }
           }
       }
